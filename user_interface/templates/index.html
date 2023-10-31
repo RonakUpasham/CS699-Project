@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Market Analysis Tool</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Stock Analysis Options</h1>
+    <form method="POST">
+        <label for="single-stock">Single Stock Analysis</label>
+        <input type="radio" name="analysis-type" id="single-stock" value="single" checked>
+        
+        <label for="compare-stocks">Comparison of Two Stocks</label>
+        <input type="radio" name="analysis-type" id="compare-stocks" value="compare">
+        
+        <div id="single-stock-search" style="display: block;">
+            <input type="text" name="query" placeholder="Search">
+        </div>
+        
+        <div id="compare-stocks-search" style="display: none;">
+            <input type="text" name="query1" placeholder="Search Stock 1">
+            <input type="text" name="query2" placeholder="Search Stock 2">
+        </div>
+        
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Search Results:</h2>
+    <ul>
+        {% for result in results %}
+            <li>{{ result }}</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // JavaScript code to show/hide search boxes based on radio button selection
+        const singleStockSearch = document.getElementById("single-stock-search");
+        const compareStocksSearch = document.getElementById("compare-stocks-search");
+        const singleStockRadio = document.getElementById("single-stock");
+        const compareStockRadio = document.getElementById("compare-stocks");
+
+        singleStockRadio.addEventListener("click", function() {
+            singleStockSearch.style.display = "block";
+            compareStocksSearch.style.display = "none";
+        });
+
+        compareStockRadio.addEventListener("click", function() {
+            singleStockSearch.style.display = "none";
+            compareStocksSearch.style.display = "block";
+        });
+    </script>
+</body>
+</html>
