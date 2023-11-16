@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 data = ["TATAMOTORS", "HCLTECH", "INDUSINDBK", "TATACONSUM", "NESTLEIND", "AXISBANK", "ADANIENT", "WIPRO"]
-app.debug = True
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     query = request.form.get("query")
@@ -16,4 +16,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
