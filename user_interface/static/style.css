@@ -1,12 +1,11 @@
-
 body {
     background-image: url('./stocks.jpg');
-    background-size: cover; 
+    background-size: cover;
     background-attachment: fixed;
     background-position: center;
     background-color: #f0f0f0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333; /* Text color */
+    color: #333;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -16,60 +15,56 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; 
-    height: 100vh; 
+    justify-content: flex-start;
+    height: 100vh;
 }
-
+#graph-container {
+    margin-top: 40px;
+    width: 80%; /* Adjust the width as needed */
+}
 form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px; 
+    margin-top: 10px;
 }
-.radio-option {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px; 
-}
+
+
 
 label {
-    font-size: 18px; 
-    margin-left: 15px; 
-    color: #f0f0f0; 
+    font-size: 18px;
+    margin-left: 15px;
+    color: #f0f0f0;
 }
 
-input[type="radio"] {
-    margin-right: 15px; 
-}
+
 
 input[type="text"] {
     padding: 12px;
-    width: 350px; 
+    width: 350px;
     font-size: 16px;
-    margin: 10px 0; 
+    margin: 10px 0;
 }
-#compare-stocks-search {
-    display: none;
-}
+
+
 button {
-    padding: 12px 24px; 
-    font-size: 18px; 
-    background-color: #7b5cff; 
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: #7b5cff;
     color: #ffffff;
     border: none;
     cursor: pointer;
-    margin-top: 20px; 
-    border-radius: 5px; 
+    margin-top: 20px;
+    border-radius: 5px;
 }
 
 button:hover {
-    background-color: #5c3ca2; 
+    background-color: #5c3ca2;
 }
 
-/* Style for search results */
 h1, h2 {
-    margin-top: 10px; 
-    color: #ffffff; 
+    margin-top: 10px;
+    color: #ffffff;
 }
 
 ul {
@@ -78,8 +73,24 @@ ul {
 }
 
 li {
-    font-size: 20px; 
-    margin-bottom: 15px; 
-    border-bottom: 1px solid #474a55; 
-    padding-bottom: 10px; 
+    font-size: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #474a55;
+    padding-bottom: 10px;
+}
+
+/* Added styles for inline stock, start date, and end date */
+.label-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.label-input-group label {
+    margin-right: 10px;
+}
+
+.label-input-group input {
+    width: 150px; /* Adjust the width as needed */
+    margin-right: 10px;
 }
