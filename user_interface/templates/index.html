@@ -75,16 +75,28 @@
         </form>
 
         <h2 style="text-align: left;">Search Results:</h2>
-        {% if graph_html %}
-            <div>
-                {{ graph_html | safe }}
+
+        <div style="display: flex; flex-direction: row;">
+
+            <div style="flex: 1;">
+                {% if graph_html1 %}
+                    <div>
+                        {{ graph_html1 | safe }}
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
-        {% if error_message %}
-            <div class="error-message" style="color: red; background-color: black; font-size: 18px;">
-                {{ error_message }}
+
+            <div style="flex: 1;">
+                {% if graph_html2 %}
+                    <div>
+                        {{ graph_html2 | safe }}
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
+
+        </div>
+
+
 
 
 
