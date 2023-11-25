@@ -26,7 +26,6 @@
         <h1 style="text-align: centre;">Stock Analysis Tool</h1>
 
         <form method="POST">
-           <!-- Add this section to each input field to maintain the last typed value -->
         
            <div class="label-input-group">
             <label>Number of stocks for Analysis:</label>
@@ -40,7 +39,6 @@
             <datalist id="stock-options">
                 <option value="TATAMOTORS">TATAMOTORS</option>
                 <option value="RELIANCE">RELIANCE</option>
-                <!-- Add other stock options here based on your data -->
             </datalist>
         </div>
 
@@ -50,7 +48,6 @@
             <datalist id="stock-options">
                 <option value="TATAMOTORS">TATAMOTORS</option>
                 <option value="RELIANCE">RELIANCE</option>
-                <!-- Add other stock options here based on your data -->
             </datalist>
         </div>
         <div class="label-input-group">
@@ -74,8 +71,14 @@
 
         </form>
 
-        <h2 style="text-align: left;">Search Results:</h2>
 
+<h2 style="text-align: left;">Search Results:</h2>
+
+<div style="display: flex; flex-direction: row;">
+
+    {% if num_stocks == 1 %}
+        <div style="flex: 1;">
+            {% if graph_html1 %}
         <div style="display: flex; flex-direction: row;">
 
             <div style="flex: 1;">
@@ -93,8 +96,21 @@
                     </div>
                 {% endif %}
             </div>
-
+            {% endif %}
         </div>
+    {% elif num_stocks == 2 %}
+        <div style="flex: 1;">
+            {% if comparison_graph_html %}
+                <div>
+                    {{ comparison_graph_html | safe }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+
+
 
 
 
