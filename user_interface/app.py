@@ -234,6 +234,16 @@ def BSE_line_compare(df_1, df_2, label_1='Line 1', label_2='Line 2'):
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == 'POST':
+        stock_options = [
+            "ADANIENT", "ADANIPORTS", "APOLLOHOSP", "ASIANPAINT", "AXISBANK", "BAJAJ-AUTO",
+            "BAJFINANCE", "BAJAJFINSV", "BPCL", "BHARTIARTL", "BRITANNIA", "CIPLA", "COALINDIA",
+            "DIVISLAB", "DRREDDY", "EICHERMOT", "GRASIM", "HCLTECH", "HDFCBANK", "HDFCLIFE",
+            "HEROMOTOCO", "HINDALCO", "HINDUNILVR", "ICICIBANK", "ITC", "INDUSINDBK", "INFY",
+            "JSWSTEEL", "KOTAKBANK", "LTIM", "LT", "M&M", "MARUTI", "NTPC", "NESTLEIND", "ONGC",
+            "POWERGRID", "RELIANCE", "SBILIFE", "SBIN", "SUNPHARMA", "TCS", "TATACONSUM",
+            "TATAMOTORS", "TATASTEEL", "TECHM", "TITAN", "UPL", "ULTRACEMCO", "WIPRO"
+        ]
+
         selected_stock = request.form.get("stock")
         start_date_str = request.form.get("start_date")
         end_date_str = request.form.get("end_date")        
@@ -270,12 +280,12 @@ def index():
         graph_html1 = plotly.offline.plot(fig1, include_plotlyjs=False, output_type='div')
         if(num_stocks == 1):
             graph_html2 = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div')
-            return render_template("index.html", graph_html1=graph_html1, graph_html2=graph_html2, num_stocks=num_stocks)
+            return render_template("index.html", stock_options=stock_options, graph_html1=graph_html1, graph_html2=graph_html2, num_stocks=num_stocks)
         else:
-            return render_template("index.html", comparison_graph_html=graph_html1, num_stocks=num_stocks)
+            return render_template("index.html", stock_options=stock_options, comparison_graph_html=graph_html1, num_stocks=num_stocks)
 
 
-    return render_template("index.html", graph_html1=None, graph_html2=None, num_stocks=None)
+    return render_template("index.html", stock_options=stock_options, graph_html1=None, graph_html2=None, num_stocks=None)
 
 
 if __name__ == "__main__":
