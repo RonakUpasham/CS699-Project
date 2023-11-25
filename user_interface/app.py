@@ -20,7 +20,6 @@ import datetime
 
 app = Flask(__name__, static_folder='static')
 
-# Function to get historical stock data from NSE
 def getNSEHistoryData(company, from_date, to_date):
     session = requests.session()
     headers = {"user-agent": "Chrome/87.0.4280.88"}
@@ -96,7 +95,6 @@ def scrape_data(stock_name, from_date, to_date):
     driver.quit()
     return df
 
-# Function to create line plot for NSE data
 def NSE_line_plot(df):
     df['Date '] = pd.to_datetime(df['Date '], format='%d-%b-%Y')
     df['OPEN '] = pd.to_numeric(df['OPEN '].str.replace(',', ''), errors='coerce')
@@ -137,7 +135,39 @@ def NSE_candlestick_plot(df):
 
     return fig
 
-# Function to create line plot for BSE data
+def NSE_line_compare(df_1, df_2, label_1='Line 1', label_2='Line 2'):
+    try:
+        df_2['Date '] = pd.to_datetime(df_2['Date '], format='%d-%b-%Y')
+    except:
+        pass
+    try:
+        df_2['OPEN '] = pd.to_numeric(df_2['OPEN '].str.replace(',', ''), errors='coerce')
+    except:
+        pass
+    try:
+        df_1['Date '] = pd.to_datetime(df_1['Date '], format='%d-%b-%Y')
+    except:
+        pass
+    try:
+        df_1['OPEN '] = pd.to_numeric(df_1['OPEN '].str.replace(',', ''), errors='coerce')
+    except:
+        pass
+
+    fig = sp.make_subplots(rows=2, cols=1, shared_xaxes=True,
+                           subplot_titles=(label_1, label_2),
+                           vertical_spacing=0.1)
+
+    trace_1 = go.Scatter(x=df_1['Date '], y=df_1['OPEN '], mode='lines', name=label_1)
+    trace_2 = go.Scatter(x=df_2['Date '], y=df_2['OPEN '], mode='lines', name=label_2)
+
+    fig.add_trace(trace_1, row=1, col=1)
+    fig.add_trace(trace_2, row=2, col=1)
+
+    fig.update_layout(title_text='Opening Prices Over Time', height=600)
+
+    return fig
+    
+
 def BSE_line_plot(df):
     df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%y')
     df['Open'] = pd.to_numeric(df['Open'].str.replace(',', ''), errors='coerce')
@@ -177,17 +207,38 @@ def BSE_candlestick_plot(df):
 
     return fig
     
+def BSE_line_compare(df_1, df_2, label_1='Line 1', label_2='Line 2'):
+    df_1['Date'] = pd.to_datetime(df_1['Date'], format='%d/%m/%y')
 
-# Flask route to handle form submission and display the plot
+    df_1['Open'] = pd.to_numeric(df_1['Open'].str.replace(',', ''), errors='coerce')
+    
+    df_2['Date'] = pd.to_datetime(df_2['Date'], format='%d/%m/%y')
+
+    df_2['Open'] = pd.to_numeric(df_2['Open'].str.replace(',', ''), errors='coerce')
+
+    fig = sp.make_subplots(rows=2, cols=1, shared_xaxes=True,
+                           subplot_titles=(label_1, label_2),
+                           vertical_spacing=0.1)
+
+    trace_1 = go.Scatter(x=df_1['Date'], y=df_1['Open'], mode='lines', name=label_1)
+    trace_2 = go.Scatter(x=df_2['Date'], y=df_2['Open'], mode='lines', name=label_2)
+
+    fig.add_trace(trace_1, row=1, col=1)
+    fig.add_trace(trace_2, row=2, col=1)
+
+    fig.update_layout(title_text='Opening Prices Over Time', height=600)
+
+    return fig
+    
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == 'POST':
         selected_stock = request.form.get("stock")
         start_date_str = request.form.get("start_date")
         end_date_str = request.form.get("end_date")        
-        
-        
-        # Check if the user selected a line or candlestick plot
+        num_stocks = int(request.form.get("num"))
+
         plot_type = request.form.get("plot_type")
         exchange_type = request.form.get("website")
 
@@ -195,25 +246,37 @@ def index():
             start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").strftime("%d/%m/%Y")
             end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").strftime("%d/%m/%Y")
             df = scrape_data(selected_stock, start_date, end_date)
-            fig1 = BSE_line_plot(df)
-            fig2 = BSE_candlestick_plot(df)
+
+            if num_stocks == 1:
+                fig1 = BSE_line_plot(df)
+                fig2 = BSE_candlestick_plot(df)
+            elif num_stocks == 2:
+                selected_stock_2 = request.form.get("stock2")
+                df_2 = scrape_data(selected_stock_2, start_date, end_date)
+                fig1 = BSE_line_compare(df, df_2, label_1=selected_stock, label_2=selected_stock_2)
+
         elif exchange_type == "NSE":
             start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
             end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
             df = getNSEHistoryData(selected_stock,from_date=start_date,to_date=end_date)
-            # Call the NSE_line_plot function with form data
-            fig1 = NSE_line_plot(df)
-            fig2 = NSE_candlestick_plot(df)
+            if num_stocks == 1:
+                fig1 = NSE_line_plot(df)
+                fig2 = NSE_candlestick_plot(df)
+            elif num_stocks == 2:
+                selected_stock_2 = request.form.get("stock2")
+                df_2 = getNSEHistoryData(selected_stock_2, from_date=start_date, to_date=end_date)
+                fig1 = NSE_line_compare(df, df_2, label_1=selected_stock, label_2=selected_stock_2)
 
-        # Convert the Plotly figures to HTML
         graph_html1 = plotly.offline.plot(fig1, include_plotlyjs=False, output_type='div')
-        graph_html2 = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div')
+        if(num_stocks == 1):
+            graph_html2 = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div')
+            return render_template("index.html", graph_html1=graph_html1, graph_html2=graph_html2, num_stocks=num_stocks)
+        else:
+            return render_template("index.html", comparison_graph_html=graph_html1, num_stocks=num_stocks)
 
-        # Render the template with the graphs
-        return render_template("index.html", graph_html1=graph_html1, graph_html2=graph_html2)
 
-    # Render the template without the graph on initial load
-    return render_template("index.html", graph_html=None)
+    return render_template("index.html", graph_html1=None, graph_html2=None, num_stocks=None)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
