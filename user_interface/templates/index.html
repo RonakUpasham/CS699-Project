@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">    
+<html lang="en">
 <head>
     <title>Stock Market Analysis Tool</title>
     <script src="{{ url_for('static', filename='plotly/dist/plotly.min.js') }}"></script>
@@ -12,25 +12,37 @@
 
         <form method="POST">
             <div class="label-input-group">
-                <label for="stock">Select Stock 1:</label>
-                <select name="stock" id="stock">
+                <label for="stock">Enter Stock Name:</label>
+                <input type="text" id="stock" name="stock" list="stock-options" placeholder="Type to search">
+                <datalist id="stock-options">
                     <option value="TATAMOTORS">TATAMOTORS</option>
-                    <option value="EQ">RELIANCE(EQ)</option>
+                    <option value="RELIANCE">RELIANCE</option>
                     <!-- Add other stock options here based on your data -->
-                </select>
+                </datalist>
             </div>
+
             <div class="label-input-group">
                 <label for="start_date">Start Date:</label>
                 <input type="date" name="start_date">
             </div>
-            
+
             <div class="label-input-group">
                 <label for="end_date">End Date:</label>
                 <input type="date" name="end_date">
             </div>
-            
+            <div class="label-input-group">
+                <input type="radio" name="plot_type" value="BSE" checked> BSE
+                <input type="radio" name="plot_type" value="NSE"> NSE
+            </div>
+
+            <div class="label-input-group">
+                <label>Plot Type:</label>
+                <input type="radio" name="plot_type" value="line" checked> Line
+                <input type="radio" name="plot_type" value="candlestick"> Candlestick
+            </div>
+
             <button type="submit">Search</button>
-            
+
         </form>
 
         <h2>Search Results:</h2>
