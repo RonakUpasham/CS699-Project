@@ -4,53 +4,90 @@
     <title>Stock Market Analysis Tool</title>
     <script src="{{ url_for('static', filename='plotly/dist/plotly.min.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function toggleSearchBoxes() {
+            var numStocks = document.querySelector('input[name="num"]:checked').value;
+            
+            var stockInputs = document.querySelectorAll('.stock-input');
+            
+            for (var i = 0; i < stockInputs.length; i++) {
+                if (i < numStocks) {
+                    stockInputs[i].style.display = 'block';
+                } else {
+                    stockInputs[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
 </head>
 <body>
 
-    <div id="content-wrapper">
-        <h1>Stock Analysis Tool</h1>
+    <div id="content-wrapper" style="text-align: centre;">
+        <h1 style="text-align: centre;">Stock Analysis Tool</h1>
 
         <form method="POST">
-            <div class="label-input-group">
-                <label for="stock">Enter Stock Name:</label>
-                <input type="text" id="stock" name="stock" list="stock-options" placeholder="Type to search">
-                <datalist id="stock-options">
-                    <option value="TATAMOTORS">TATAMOTORS</option>
-                    <option value="RELIANCE">RELIANCE</option>
-                    <!-- Add other stock options here based on your data -->
-                </datalist>
-            </div>
+           <!-- Add this section to each input field to maintain the last typed value -->
+        
+           <div class="label-input-group">
+            <label>Number of stocks for Analysis:</label>
+            <input type="radio" name="num" value="1" {% if request.form.get('num') == '1' %}checked{% endif %} onclick="toggleSearchBoxes()" style="background-color: black;"> <span style="color: white; background-color: black;">1</span>
+            <input type="radio" name="num" value="2" {% if request.form.get('num') == '2' %}checked{% endif %} onclick="toggleSearchBoxes()" style="background-color: black;"> <span style="color: white; background-color: black;">2</span>
+        </div>
+        
+        <div class="label-input-group stock-input">
+            <label for="stock">Enter Stock Name:</label>
+            <input type="text" id="stock" name="stock" list="stock-options" placeholder="Type to search" value="{{ request.form.get('stock') }}">
+            <datalist id="stock-options">
+                <option value="TATAMOTORS">TATAMOTORS</option>
+                <option value="RELIANCE">RELIANCE</option>
+                <!-- Add other stock options here based on your data -->
+            </datalist>
+        </div>
 
-            <div class="label-input-group">
-                <label for="start_date">Start Date:</label>
-                <input type="date" name="start_date">
-            </div>
+        <div class="label-input-group stock-input">
+            <label for="stock2">Enter Stock Name:</label>
+            <input type="text" id="stock2" name="stock2" list="stock-options" placeholder="Type to search" value="{{ request.form.get('stock2') }}">
+            <datalist id="stock-options">
+                <option value="TATAMOTORS">TATAMOTORS</option>
+                <option value="RELIANCE">RELIANCE</option>
+                <!-- Add other stock options here based on your data -->
+            </datalist>
+        </div>
+        <div class="label-input-group">
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" value="{{ request.form.get('start_date') }}">
+        </div>
 
-            <div class="label-input-group">
-                <label for="end_date">End Date:</label>
-                <input type="date" name="end_date">
-            </div>
-            <div class="label-input-group">
-                <input type="radio" name="plot_type" value="BSE" checked> BSE
-                <input type="radio" name="plot_type" value="NSE"> NSE
-            </div>
+        <div class="label-input-group">
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date" value="{{ request.form.get('end_date') }}">
+        </div>
 
-            <div class="label-input-group">
-                <label>Plot Type:</label>
-                <input type="radio" name="plot_type" value="line" checked> Line
-                <input type="radio" name="plot_type" value="candlestick"> Candlestick
-            </div>
+        <div class="label-input-group">
+            <label>Choose website for scrapping:</label>
+            <input type="radio" name="website" value="BSE" {% if request.form.get('website') == 'BSE' %}checked{% endif %}> <span style="color: white; background-color: black;">BSE</span>
+            <input type="radio" name="website" value="NSE" {% if request.form.get('website') == 'NSE' %}checked{% endif %}> <span style="color: white; background-color: black;">NSE</span>
+         </div>
 
-            <button type="submit">Search</button>
+
+        <button type="submit">Search</button>
 
         </form>
 
-        <h2>Search Results:</h2>
+        <h2 style="text-align: left;">Search Results:</h2>
         {% if graph_html %}
             <div>
                 {{ graph_html | safe }}
             </div>
         {% endif %}
+        {% if error_message %}
+            <div class="error-message" style="color: red; background-color: black; font-size: 18px;">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+
+
     </div>
 
 </body>
