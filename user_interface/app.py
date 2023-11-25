@@ -21,6 +21,7 @@ import datetime
 app = Flask(__name__, static_folder='static')
 
 def getNSEHistoryData(company, from_date, to_date):
+    """Scrape data for stock between a date range from NSE"""
     session = requests.session()
     headers = {"user-agent": "Chrome/87.0.4280.88"}
     head = {'user-agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ""Chrome/87.0.4280.88 Safari/537.36 "}
@@ -34,6 +35,10 @@ def getNSEHistoryData(company, from_date, to_date):
     return df
 
 def scrape_data(stock_name, from_date, to_date):
+    """Scrape data for stock between a date range from BSE. 
+        The BSE webpage only displays 26 dates at a time, hence 
+        we divide the date range into 26 day chunks and make
+        subsequent requests to the webpage"""
     options = webdriver.ChromeOptions()
     options.add_argument("start-maximized")
     options.add_argument("disable-infobars")
@@ -96,6 +101,7 @@ def scrape_data(stock_name, from_date, to_date):
     return df
 
 def NSE_line_plot(df):
+    """Line plot for Opening Price of an NSE stock with bar chart for Volume"""
     df['Date '] = pd.to_datetime(df['Date '], format='%d-%b-%Y')
     df['OPEN '] = pd.to_numeric(df['OPEN '].str.replace(',', ''), errors='coerce')
     df['VOLUME '] = pd.to_numeric(df['VOLUME '].str.replace(',', ''), errors='coerce')
@@ -115,6 +121,7 @@ def NSE_line_plot(df):
     return fig
 
 def NSE_candlestick_plot(df):
+    """Candlestick plot for NSE stock"""
     #df['OPEN '] = pd.to_numeric(df['OPEN '].str.replace(',', ''), errors='coerce')
     df['HIGH '] = pd.to_numeric(df['HIGH '].str.replace(',', ''), errors='coerce')
     df['LOW '] = pd.to_numeric(df['LOW '].str.replace(',', ''), errors='coerce')
@@ -136,6 +143,7 @@ def NSE_candlestick_plot(df):
     return fig
 
 def NSE_line_compare(df_1, df_2, label_1='Line 1', label_2='Line 2'):
+    """Comparison plot between Opening Prices of 2 stocks from NSE"""
     try:
         df_2['Date '] = pd.to_datetime(df_2['Date '], format='%d-%b-%Y')
     except:
@@ -169,6 +177,7 @@ def NSE_line_compare(df_1, df_2, label_1='Line 1', label_2='Line 2'):
     
 
 def BSE_line_plot(df):
+    """Line plot for Opening Price of an BSE stock with bar chart for Volume"""
     df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%y')
     df['Open'] = pd.to_numeric(df['Open'].str.replace(',', ''), errors='coerce')
     df['No. of Shares'] = pd.to_numeric(df['No. of Shares'].str.replace(',', ''), errors='coerce')
@@ -187,6 +196,7 @@ def BSE_line_plot(df):
     return fig
 
 def BSE_candlestick_plot(df):
+    """Candlestick plot for BSE stock"""
     #df['Open'] = pd.to_numeric(df['Open'].str.replace(',', ''), errors='coerce')
     df['High'] = pd.to_numeric(df['High'].str.replace(',', ''), errors='coerce')
     df['Low'] = pd.to_numeric(df['Low'].str.replace(',', ''), errors='coerce')
@@ -208,6 +218,8 @@ def BSE_candlestick_plot(df):
     return fig
     
 def BSE_line_compare(df_1, df_2, label_1='Line 1', label_2='Line 2'):
+    """Comparison plot between Opening Prices of 2 stocks from BSE"""
+
     df_1['Date'] = pd.to_datetime(df_1['Date'], format='%d/%m/%y')
 
     df_1['Open'] = pd.to_numeric(df_1['Open'].str.replace(',', ''), errors='coerce')
