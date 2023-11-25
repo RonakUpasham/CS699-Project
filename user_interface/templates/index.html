@@ -37,19 +37,23 @@
             <label for="stock">Enter Stock Name:</label>
             <input type="text" id="stock" name="stock" list="stock-options" placeholder="Type to search" value="{{ request.form.get('stock') }}">
             <datalist id="stock-options">
-                <option value="TATAMOTORS">TATAMOTORS</option>
-                <option value="RELIANCE">RELIANCE</option>
+                {% for stock_option in stock_options %}
+                    <option value="{{ stock_option }}">{{ stock_option }}</option>
+                {% endfor %}
             </datalist>
         </div>
+
 
         <div class="label-input-group stock-input">
             <label for="stock2">Enter Stock Name:</label>
             <input type="text" id="stock2" name="stock2" list="stock-options" placeholder="Type to search" value="{{ request.form.get('stock2') }}">
             <datalist id="stock-options">
-                <option value="TATAMOTORS">TATAMOTORS</option>
-                <option value="RELIANCE">RELIANCE</option>
+                {% for stock_option in stock_options %}
+                    <option value="{{ stock_option }}">{{ stock_option }}</option>
+                {% endfor %}
             </datalist>
         </div>
+
         <div class="label-input-group">
             <label for="start_date">Start Date:</label>
             <input type="date" name="start_date" value="{{ request.form.get('start_date') }}">
