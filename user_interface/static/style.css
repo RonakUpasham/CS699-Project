@@ -61,7 +61,14 @@ button {
 button:hover {
     background-color: #5c3ca2;
 }
-
+.label-input-group input[type="radio"] {
+    margin-right: 0px;
+    margin-left: 0px;
+    color: #f0f0f0; /* Text color */
+}
+.label-input-group input[type="radio"]:checked {
+    border-color:white;
+}
 h1, h2 {
     margin-top: 10px;
     color: #ffffff;
