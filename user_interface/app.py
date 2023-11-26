@@ -245,7 +245,7 @@ def BSE_line_compare(df_1, df_2, label_1='Line 1', label_2='Line 2'):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == 'POST':
+   
         stock_options = [
             "ADANIENT", "ADANIPORTS", "APOLLOHOSP", "ASIANPAINT", "AXISBANK", "BAJAJ-AUTO",
             "BAJFINANCE", "BAJAJFINSV", "BPCL", "BHARTIARTL", "BRITANNIA", "CIPLA", "COALINDIA",
@@ -255,49 +255,49 @@ def index():
             "POWERGRID", "RELIANCE", "SBILIFE", "SBIN", "SUNPHARMA", "TCS", "TATACONSUM",
             "TATAMOTORS", "TATASTEEL", "TECHM", "TITAN", "UPL", "ULTRACEMCO", "WIPRO"
         ]
+        if request.method == 'POST':
+            selected_stock = request.form.get("stock")
+            start_date_str = request.form.get("start_date")
+            end_date_str = request.form.get("end_date")        
+            num_stocks = int(request.form.get("num"))
 
-        selected_stock = request.form.get("stock")
-        start_date_str = request.form.get("start_date")
-        end_date_str = request.form.get("end_date")        
-        num_stocks = int(request.form.get("num"))
+            plot_type = request.form.get("plot_type")
+            exchange_type = request.form.get("website")
 
-        plot_type = request.form.get("plot_type")
-        exchange_type = request.form.get("website")
+            if exchange_type == "BSE":
+                start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").strftime("%d/%m/%Y")
+                end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").strftime("%d/%m/%Y")
+                df = scrape_data(selected_stock, start_date, end_date)
 
-        if exchange_type == "BSE":
-            start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").strftime("%d/%m/%Y")
-            end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").strftime("%d/%m/%Y")
-            df = scrape_data(selected_stock, start_date, end_date)
+                if num_stocks == 1:
+                    fig1 = BSE_line_plot(df)
+                    fig2 = BSE_candlestick_plot(df)
+                elif num_stocks == 2:
+                    selected_stock_2 = request.form.get("stock2")
+                    df_2 = scrape_data(selected_stock_2, start_date, end_date)
+                    fig1 = BSE_line_compare(df, df_2, label_1=selected_stock, label_2=selected_stock_2)
 
-            if num_stocks == 1:
-                fig1 = BSE_line_plot(df)
-                fig2 = BSE_candlestick_plot(df)
-            elif num_stocks == 2:
-                selected_stock_2 = request.form.get("stock2")
-                df_2 = scrape_data(selected_stock_2, start_date, end_date)
-                fig1 = BSE_line_compare(df, df_2, label_1=selected_stock, label_2=selected_stock_2)
+            elif exchange_type == "NSE":
+                start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
+                end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
+                df = getNSEHistoryData(selected_stock,from_date=start_date,to_date=end_date)
+                if num_stocks == 1:
+                    fig1 = NSE_line_plot(df)
+                    fig2 = NSE_candlestick_plot(df)
+                elif num_stocks == 2:
+                    selected_stock_2 = request.form.get("stock2")
+                    df_2 = getNSEHistoryData(selected_stock_2, from_date=start_date, to_date=end_date)
+                    fig1 = NSE_line_compare(df, df_2, label_1=selected_stock, label_2=selected_stock_2)
 
-        elif exchange_type == "NSE":
-            start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
-            end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d").strftime("%d-%m-%Y")
-            df = getNSEHistoryData(selected_stock,from_date=start_date,to_date=end_date)
-            if num_stocks == 1:
-                fig1 = NSE_line_plot(df)
-                fig2 = NSE_candlestick_plot(df)
-            elif num_stocks == 2:
-                selected_stock_2 = request.form.get("stock2")
-                df_2 = getNSEHistoryData(selected_stock_2, from_date=start_date, to_date=end_date)
-                fig1 = NSE_line_compare(df, df_2, label_1=selected_stock, label_2=selected_stock_2)
-
-        graph_html1 = plotly.offline.plot(fig1, include_plotlyjs=False, output_type='div')
-        if(num_stocks == 1):
-            graph_html2 = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div')
-            return render_template("index.html", stock_options=stock_options, graph_html1=graph_html1, graph_html2=graph_html2, num_stocks=num_stocks)
-        else:
-            return render_template("index.html", stock_options=stock_options, comparison_graph_html=graph_html1, num_stocks=num_stocks)
+            graph_html1 = plotly.offline.plot(fig1, include_plotlyjs=False, output_type='div')
+            if(num_stocks == 1):
+                graph_html2 = plotly.offline.plot(fig2, include_plotlyjs=False, output_type='div')
+                return render_template("index.html", stock_options=stock_options, graph_html1=graph_html1, graph_html2=graph_html2, num_stocks=num_stocks)
+            else:
+                return render_template("index.html", stock_options=stock_options, comparison_graph_html=graph_html1, num_stocks=num_stocks)
 
 
-    return render_template("index.html", stock_options=stock_options, graph_html1=None, graph_html2=None, num_stocks=None)
+        return render_template("index.html", stock_options=stock_options, graph_html1=None, graph_html2=None, num_stocks=None)
 
 
 if __name__ == "__main__":
