@@ -43,10 +43,6 @@ Getting Started
     Run the Flask app using python app.py.
     Access the web interface at http://localhost:5000 in your browser.
 
-Dependencies
-
-    Flask
-    Plotly
 
 Contributors
 
