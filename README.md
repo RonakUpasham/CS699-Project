@@ -47,7 +47,6 @@ Dependencies
 
     Flask
     Plotly
-    Other dependencies specified in the requirements.txt file.
 
 Contributors
 
