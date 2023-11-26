@@ -11,7 +11,7 @@ Key Features
 2. Data Scraping
 
     Stock data is scraped from both BSE and NSE using Python.
-    The scraped data is stored in a PostgreSQL database for future reference.
+    
 
 3. Data Visualization
 
@@ -23,10 +23,6 @@ Project Structure
 
     The Flask app handles user requests and communicates with the backend for data retrieval.
     Various routes are defined to support different functionalities, such as single stock analysis and stock comparison.
-
-2. PostgreSQL Database
-
-    The project utilizes a PostgreSQL database to store scraped stock data.
 
 3. Data Scraping Scripts
 
@@ -42,9 +38,8 @@ Project Structure
 
 Getting Started
 
-    Clone the repository.
-    Install the required dependencies using pip install -r requirements.txt.
-    Set up a PostgreSQL database and update the connection details in the Flask app.
+    Go to this link and download v.26.2 : https://github.com/plotly/plotly.js/releases
+    Extract the downloaded zip file in static folder and rename it to "plotly"
     Run the Flask app using python app.py.
     Access the web interface at http://localhost:5000 in your browser.
 
@@ -52,7 +47,6 @@ Dependencies
 
     Flask
     Plotly
-    psycopg2 (PostgreSQL adapter)
     Other dependencies specified in the requirements.txt file.
 
 Contributors
